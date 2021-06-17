@@ -1,0 +1,246 @@
+---
+jupyter:
+  jupytext:
+    formats: ipynb,Rmd
+    text_representation:
+      extension: .Rmd
+      format_name: rmarkdown
+      format_version: '1.2'
+      jupytext_version: 1.11.1
+  kernelspec:
+    display_name: Python 3
+    language: python
+    name: python3
+---
+
+```{python}
+# %matplotlib inline
+import matplotlib
+matplotlib.rcParams['figure.figsize'] = [8, 3]
+import matplotlib.pyplot as plt
+
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+import statsmodels
+
+import scipy
+from scipy.stats import pearsonr
+
+from pandas.plotting import register_matplotlib_converters
+register_matplotlib_converters()
+```
+
+```{python}
+print(matplotlib.__version__)
+print(pd.__version__)
+print(np.__version__)
+print(statsmodels.__version__)
+print(scipy.__version__)
+
+```
+
+## Obtain and visualize data
+
+```{python}
+## data obtained from https://datahub.io/core/global-temp#data
+df = pd.read_csv("global_temps.csv")
+df.head()
+```
+
+```{python}
+df.Mean[:100].plot()
+```
+
+```{python}
+df_gcag = df[df['Source']=='GCAG']
+df_gcag
+```
+
+```{python}
+df_gistemp = df[df['Source']=='GISTEMP']
+df_gistemp
+```
+
+```{python}
+df_gcag.Mean[:100].plot()
+```
+
+## Exercise: what is wrong with the data and plot above? How can we fix this?
+
+
+1. two different sources are being charted on the same graph with no legends.
+2. missing units
+3. x axis is appears to be the day number
+4. x axis time series move forwards from right to left
+
+```{python}
+df = df.pivot(index='Date', columns='Source', values='Mean')
+```
+
+```{python}
+df.head()
+```
+
+```{python}
+df.GCAG.plot()
+```
+
+```{python}
+type(df.index)
+```
+
+## Exercise: how can we make the index more time aware?
+
+```{python}
+df.index = pd.to_datetime(df.index)
+```
+
+```{python}
+type(df.index)
+```
+
+```{python}
+df.GCAG.plot()
+```
+
+```{python}
+df['1880']
+```
+
+```{python}
+plt.plot(df['1880':'1950'][['GCAG', 'GISTEMP']])
+```
+
+```{python}
+plt.plot(df['1950':][['GISTEMP']])
+```
+
+## Exercise: How strongly do these measurements correlate contemporaneously? What about with a time lag?
+
+```{python}
+
+```
+
+## Unobserved component model
+
+```{python}
+train = df['1960':]
+```
+
+### model parameters
+
+```{python}
+# smooth trend model without seasonal or cyclical components
+model = {
+    'level': 'smooth trend', 'cycle': False, 'seasonal': None, 
+}
+
+```
+
+### fitting a model
+
+```{python}
+# https://www.statsmodels.org/dev/generated/statsmodels.tsa.statespace.structural.UnobservedComponents.html
+gcag_mod = sm.tsa.UnobservedComponents(train['GCAG'], **model)
+gcag_res = gcag_mod.fit()
+```
+
+```{python}
+fig = gcag_res.plot_components(legend_loc='lower right', figsize=(15, 9));
+```
+
+## Plotting predictions
+
+```{python}
+# Perform rolling prediction and multistep forecast
+num_steps = 20
+predict_res = gcag_res.get_prediction(dynamic=train['GCAG'].shape[0] - num_steps)
+
+predict = predict_res.predicted_mean
+ci = predict_res.conf_int()
+```
+
+```{python}
+plt.plot(predict)
+```
+
+```{python}
+plt.scatter(train['GCAG'], predict)
+```
+
+```{python}
+fig, ax = plt.subplots()
+# Plot the results
+ax.plot(train['GCAG'], 'k.', label='Observations');
+ax.plot(train.index[:-num_steps], predict[:-num_steps], label='One-step-ahead Prediction');
+
+ax.plot(train.index[-num_steps:], predict[-num_steps:], 'r', label='Multistep Prediction');
+ax.plot(train.index[-num_steps:], ci.iloc[-num_steps:], 'k--');
+
+# Cleanup the image
+legend = ax.legend(loc='upper left');
+```
+
+```{python}
+fig, ax = plt.subplots()
+# Plot the results
+ax.plot(train.index[-40:], train['GCAG'][-40:], 'k.', label='Observations');
+ax.plot(train.index[-40:-num_steps], predict[-40:-num_steps], label='One-step-ahead Prediction');
+
+ax.plot(train.index[-num_steps:], predict[-num_steps:], 'r', label='Multistep Prediction');
+ax.plot(train.index[-num_steps:], ci.iloc[-num_steps:], 'k--');
+
+# Cleanup the image
+legend = ax.legend(loc='upper left');
+```
+
+## Exercise: consider adding a seasonal term for 12 periods for the model fit above. Does this improve the fit of the model?
+
+```{python}
+
+```
+
+## How does this compare to the original model?
+
+```{python}
+
+```
+
+## Let's explore the seasonality more
+
+```{python}
+seasonal_model = {
+    'level': 'local level',
+    'seasonal': 12
+}
+llmod = sm.tsa.UnobservedComponents(train['GCAG'], **seasonal_model)
+ll_level_res = llmod.fit(method='powell', disp=False)
+```
+
+```{python}
+fig = ll_level_res.plot_components(legend_loc='lower right', figsize=(15, 9));
+```
+
+```{python}
+np.mean(np.abs(ll_level_res.predict() - train['GCAG']))
+```
+
+```{python}
+train[:48].GCAG.plot()
+```
+
+## Exercise: a common null model for time series is to predict the value at time t-1 for the value at time t. How does such a model compare to the models we fit here?
+
+
+### Consider correlation
+
+```{python}
+
+```
+
+### What about mean absolute error?
+
+```{python}
+
+```
