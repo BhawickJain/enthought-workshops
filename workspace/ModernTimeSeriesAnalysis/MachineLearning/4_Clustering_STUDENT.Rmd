@@ -1,0 +1,365 @@
+---
+jupyter:
+  jupytext:
+    formats: ipynb,Rmd
+    text_representation:
+      extension: .Rmd
+      format_name: rmarkdown
+      format_version: '1.2'
+      jupytext_version: 1.11.1
+  kernelspec:
+    display_name: Python 3
+    language: python
+    name: python3
+---
+
+## Clustering time series for classification
+
+```{python}
+# %matplotlib inline
+import matplotlib.pyplot as plt
+plt.rcParams['figure.figsize'] = [15, 10]
+
+from math import sqrt
+
+from datetime import datetime
+import pandas as pd
+import numpy as np
+import pdb
+
+
+from scipy.cluster.hierarchy import dendrogram, linkage
+from scipy.spatial.distance import squareform
+
+from sklearn.metrics.pairwise import pairwise_distances
+from sklearn import preprocessing
+from sklearn.cluster import AgglomerativeClustering
+from sklearn.metrics.cluster import homogeneity_score, completeness_score
+from sklearn.metrics.cluster import contingency_matrix
+from sklearn.metrics.cluster import homogeneity_score
+
+from dtaidistance import dtw
+
+from collections import Counter
+
+from scipy.stats import pearsonr
+```
+
+## The data
+
+```{python}
+words = pd.read_csv('https://raw.githubusercontent.com/AileenNielsen/TimeSeriesAnalysisWithPython/master/data/50words_TEST.csv',
+                   header = None)
+```
+
+```{python}
+words.rename(columns = {0:'word'}, inplace = True) 
+```
+
+```{python}
+words.head()
+```
+
+## View output
+
+```{python}
+words.word[1]
+```
+
+```{python}
+plt.subplot(3, 2, 1)
+plt.plot(words.iloc[1, 1:-1])
+plt.title("Sample Projection Word " + str(words.word[1]), fontweight = 'bold', y = 0.8, fontsize = 14)
+plt.subplot(3, 2, 2)
+plt.hist(words.iloc[1, 1:-1], 10)
+plt.title("Histogram of Projection Word " + str(words.word[1]), fontweight = 'bold', y = 0.8, fontsize = 14)
+plt.subplot(3, 2, 3)
+plt.plot(words.iloc[3, 1:-1])
+plt.title("Sample Projection Word " + str(words.word[3]), fontweight = 'bold', y = 0.8, fontsize = 14)
+plt.subplot(3, 2, 4)
+plt.hist(words.iloc[3, 1:-1], 10)
+plt.title("Histogram of Projection Word " + str(words.word[3]), fontweight = 'bold', y = 0.8, fontsize = 14)
+plt.subplot(3, 2, 5)
+plt.plot(words.iloc[5, 1:-1])
+plt.title("Sample Projection Word " + str(words.word[11]), fontweight = 'bold', y = 0.8, fontsize = 14)
+plt.subplot(3, 2, 6)
+plt.hist(words.iloc[5, 1:-1], 10)
+plt.title("Histogram of Projection Word " + str(words.word[11]), fontweight = 'bold', y = 0.8, fontsize = 14)
+plt.suptitle("Sample word projections and histograms of the projections", fontsize = 18)
+```
+
+```{python}
+
+## We can also consider the 2d histogram of a word
+x = np.array([])
+y = np.array([])
+
+w = 23
+selected_words = words[words.word == w]
+selected_words.shape
+
+for idx, row in selected_words.iterrows():
+    y = np.hstack([y, row[1:271]])
+    x = np.hstack([x, np.array(range(270))])
+    
+fig, ax = plt.subplots()
+hist = ax.hist2d(x, y, bins = 50)
+plt.xlabel("Time", fontsize = 18)
+plt.ylabel("Value", fontsize = 18)
+```
+
+## Generate some features
+
+```{python}
+words.shape
+```
+
+```{python}
+words_features = words.iloc[:, 1:271]
+```
+
+### Create some features from original time series
+
+```{python}
+times  = []
+values = []
+for idx, row in words_features.iterrows():
+    values.append(row.values)
+    times.append(np.array([i for i in range(row.values.shape[0])]))
+```
+
+```{python}
+len(values)
+```
+
+```{python}
+# from cesium import featurize
+# features_to_use = ["amplitude",
+#                    "percent_beyond_1_std",
+#                    "percent_close_to_median",
+#                    ]
+# featurized_words = featurize.featurize_time_series(times=times,
+#                                               values=values,
+#                                               errors=None,
+#                                               features_to_use=features_to_use,
+#                                               scheduler = None)
+```
+
+```{python}
+featurized_words = pd.read_csv("data/featurized_words.csv", header = [0, 1])
+featurized_words.columns = featurized_words.columns.droplevel(-1)
+```
+
+```{python}
+featurized_words.head()
+```
+
+```{python}
+featurized_words.shape
+```
+
+```{python}
+
+```
+
+```{python}
+plt.hist(featurized_words.percent_beyond_1_std)
+```
+
+### Create some features from histogram
+
+```{python}
+# times = []
+# values = []
+# for idx, row in words_features.iterrows():
+#     values.append(np.histogram(row.values, bins=10, range=(-2.5, 5.0))[0] + .0001) ## cesium seems not to handle 0s
+#     times.append(np.array([i for i in range(9)]))
+```
+
+```{python}
+# features_to_use = ["amplitude",
+#                    "percent_close_to_median",
+#                   "skew"
+#                   ]
+# featurized_hists = featurize.featurize_time_series(times=times,
+#                                               values=values,
+#                                               errors=None,
+#                                               features_to_use=features_to_use,
+#                                               scheduler = None)
+```
+
+```{python}
+# featurized_hists.to_csv("data/featurized_hists.csv")
+```
+
+```{python}
+featurized_hists = pd.read_csv("data/featurized_hists.csv", header = [0, 1])
+featurized_hists.columns = featurized_hists.columns.droplevel(-1)
+```
+
+```{python}
+featurized_hists.head()
+```
+
+```{python}
+features = pd.concat([featurized_words.reset_index(drop=True), featurized_hists], axis=1)
+```
+
+```{python}
+features.head()
+```
+
+```{python}
+words.shape
+```
+
+```{python}
+## we also add some of our own features again, to account more for shape
+feats = np.zeros( (words.shape[0], 1), dtype = np.float32)
+for i in range(words.shape[0]):
+    vals = words.iloc[i, 1:271].values
+    feats[i, 0] = np.where(vals == np.max(vals))[0][0]
+```
+
+```{python}
+feats.shape
+```
+
+```{python}
+features.shape
+```
+
+```{python}
+features['peak_location'] = feats
+```
+
+```{python}
+features.head()
+```
+
+```{python}
+feature_values = preprocessing.scale(features.iloc[:, [1, 2, 3, 5, 6, 7]])
+```
+
+```{python}
+
+clustering = AgglomerativeClustering(n_clusters=50, linkage='ward')
+clustering.fit(feature_values)
+words['feature_label'] = clustering.labels_
+```
+
+```{python}
+words['feature_label'] = words.feature_label.astype('category')
+```
+
+```{python}
+## the number of feature labels 
+results = words.groupby('word')['feature_label'].agg({'num_clustering_labels': lambda x: len(set(x)),
+                                            'num_word_samples':      lambda x: len(x),
+                                            'most_common_label':     lambda x: Counter(x).most_common(1)[0][0]})
+results.head()
+```
+
+```{python}
+## the number of feature labels 
+results_feats = words.groupby('feature_label')['word'].agg({'num_words': lambda x: len(set(x)),
+                                            'num_feat_samples':      lambda x: len(x),
+                                            'most_common_word':     lambda x: Counter(x).most_common(1)[0][0]})
+results_feats
+## note that word 1 = most common in cluster 38
+```
+
+```{python}
+homogeneity_score(words.word, words.feature_label)
+## see definitions in user manual: https://scikit-learn.org/stable/modules/clustering.html#homogeneity-completeness
+```
+
+## Dynamic Time Warping Distance Definition
+
+```{python}
+ts1 = np.sin(np.linspace(1, 10))
+ts2 = np.sin(2 * np.linspace(1, 10))
+ts3 = np.zeros((50,)) 
+plt.plot(ts1)
+plt.plot(ts2)
+plt.plot(ts3)
+```
+
+## Exercise: calculate the Euclidean distance between respective pairs of time series from the 3 time series above
+
+```{python}
+np.sqrt(np.sum(np.square(ts1 - ts2)))
+```
+
+```{python}
+np.sqrt(np.sum(np.square(ts1 - ts3)))
+```
+
+```{python}
+np.sqart(np.sum(np.square(ts2 - ts3)))
+```
+
+```{python}
+n.linespace(1, 10).shape
+```
+
+## Another time series clustering technique that has been recommended is a correlation measure. How does this fair in the case of our sine curves and straigh line?
+
+```{python}
+np.random.seed(215202)
+ts3_noise = np.random.random(ts3.shape)
+ts3 = np.zeros((50,)) 
+ts3 = ts3 + ts3_noise
+```
+
+```{python}
+pearsonr(ts1, ts2)
+```
+
+```{python}
+pearsonr(ts1, ts3)
+```
+
+```{python}
+pearsonr(ts2, ts3 + np.random.random(ts3.shape))
+```
+
+## Exercise: use what we discussed about dynamic programming to code a DTW function
+
+```{python}
+
+```
+
+## Exercise: does this fix the problem above noted with the sine curves vs. a straight line?
+
+```{python}
+
+```
+
+## Calculate the distance matrix
+
+```{python}
+# X = words.iloc[:, 1:271].values
+# p = pairwise_distances(X, metric = distDTW)
+```
+
+```{python}
+# with open("pairwise_word_distances.npy", "wb") as f:
+#     np.save(f, p)
+```
+
+```{python}
+p = np.load("data/pairwise_word_distances.npy")
+```
+
+## Exercise: Try clustering based on dynamic time warping distances
+
+```{python}
+
+```
+
+## Exercise: How did the clustering perform?
+
+```{python}
+
+```
