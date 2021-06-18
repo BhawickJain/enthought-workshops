@@ -1,0 +1,197 @@
+---
+jupyter:
+  jupytext:
+    formats: ipynb,Rmd
+    text_representation:
+      extension: .Rmd
+      format_name: rmarkdown
+      format_version: '1.2'
+      jupytext_version: 1.11.1
+  kernelspec:
+    display_name: Python 3
+    language: python
+    name: python3
+---
+
+```{python}
+# %matplotlib inline
+
+width = 6
+height = 3
+import matplotlib
+matplotlib.rcParams['figure.figsize'] = [width, height]
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import hmmlearn
+
+from hmmlearn.hmm import GaussianHMM
+```
+
+```{python}
+print(pd.__version__)
+print(np.__version__)
+print(hmmlearn.__version__)
+```
+
+## Look at the data
+
+```{python}
+nile = pd.read_csv("Nile.csv", index_col = 0)
+```
+
+```{python}
+nile.head()
+```
+
+```{python}
+plt.plot(nile.year, nile.val)
+```
+
+## Let's take a look at the hmmlearn API
+
+
+hmmlearn was once part of Scikit Learn
+
+```{python}
+vals = np.expand_dims(nile.val.values, 1)
+n_states = 2
+model = GaussianHMM(n_components=n_states, n_iter=100).fit(vals)
+hidden_states = model.predict(vals)
+```
+
+```{python}
+plt.plot(hidden_states)
+```
+
+```{python}
+np.bincount(hidden_states)
+```
+
+```{python}
+plt.plot(hidden_states)
+```
+
+## Exercise: how can we package this more conveniently?
+
+```{python}
+def fitHMM(vals, n_states):
+    vals = np.reshape(vals, [len(vals), 1])
+    
+    # fit Gaussian HMM to 0
+    model = GaussianHMM(n_components=n_states, n_iter=100).fit(vals)
+    
+    # classify each observation as state 0 or 1
+    hidden_states = model.predict(vals)
+    
+    # fit HMM paramets
+    mus = np.squeeze(model.means_)
+    sigmas = np.squeeze(np.sqrt(model.covars_))
+    transmat = np.array(model.transmat_)
+    print(mus)
+    print(sigmas)
+    
+    # re-roder parameters in ascending order of mean of underlying distribution
+    idx = np.argsort(mus)
+    mus = mus[idx]
+    sigmas = sigmas[idx]
+    transmat = transmat[idx, :][:, idx]
+    
+    state_dict = {}
+    states = [i for i in range (n_states)]
+    for i in idx: 
+        state_dict[i] = states[idx[i]]
+    
+    
+    
+    relabeled_states = [state_dict[h] for h in hidden_states]
+#     relabeled_states = hidden_states
+    return (relabeled_states, mus, sigmas, transmat, model)
+                     
+```
+
+```{python}
+hidden_states, mus, sigmas, transmat, model = fitHMM(nile.val.values, 2)
+```
+
+## Exercise: how might we be able to plot this more sensibly?
+
+```{python}
+def plot_states(ts_vals, states, time_vals):
+    fig, ax1 = plt.subplots()
+    
+    color = 'tab:red'
+    ax1.set_xlabel('Year')
+    ax1.set_ylabel('Nile river flow', color=color)
+    ax1.plot(time_vals, ts_vals, color=color)
+    ax1.tick_params(axis='y', labelcolor=color)
+    
+    ax2 = ax1.twinx()
+    color = 'tab:blue'
+    ax2.set_ylabel('Hidden state', color=color)
+    ax2.plot(time_vals,states, color=color)
+    ax2.tick_params(axis='y', labelcolor=color)
+    
+    fig.tight_layout()
+    plt.show()
+```
+
+```{python}
+plot_states(nile.val, hidden_states, nile.year)
+```
+
+## Exercise: can we improve on the analysis above?
+
+
+### Cut off the 'special' region
+
+```{python}
+hidden_states, mus, sigmas, transmat, model = fitHMM(nile.val.values[28:], 2)
+```
+
+```{python}
+plt.plot(hidden_states)
+```
+
+### Change the input parameters
+
+```{python}
+hidden_states, mus, sigmas, transmat, model = fitHMM(nile.val.values, 3)
+```
+
+```{python}
+plot_states(nile.val, hidden_states, nile.year)
+```
+
+```{python}
+mus
+```
+
+```{python}
+np.set_printoptions(precision=3, suppress=True)
+```
+
+```{python}
+transmat
+```
+
+```{python}
+mus
+```
+
+
+## Exercise: generate new synthetic data from the model and then fit it with a fresh HMM model
+
+
+#### Easy to sample from an existing HMM model
+
+```{python}
+
+```
+
+#### Then refit
+
+```{python}
+
+```
