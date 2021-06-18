@@ -187,11 +187,40 @@ mus
 #### Easy to sample from an existing HMM model
 
 ```{python}
+res = np.squeeze(model.sample(1000)[0])
+```
 
+```{python}
+plt.plot(res)
 ```
 
 #### Then refit
 
 ```{python}
+hidden_states, mus, sigmas, transmat, model = fitHMM(res, 3)
+```
 
+```{python}
+def plot_states_no_time(ts_vals, states):
+    fig, ax1 = plt.subplots()
+    
+    color = 'tab:red'
+    ax1.set_xlabel('Time')
+    ax1.set_ylabel('Value', color=color)
+    ax1.plot(ts_vals, color=color)
+    ax1.tick_params(axis='y', labelcolor=color)
+    
+    ax2 = ax1.twinx()
+    color = 'tab:blue'
+    ax2.set_ylabel('Hidden state', color=color)
+    ax2.plot(states, color=color)
+    ax2.tick_params(axis='y', labelcolor=color)
+```
+
+```{python}
+plot_states_no_time(res[1:100], hidden_states[1:100])
+```
+
+```{python}
+transmat
 ```
