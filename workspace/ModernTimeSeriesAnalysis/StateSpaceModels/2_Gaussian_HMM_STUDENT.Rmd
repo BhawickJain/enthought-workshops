@@ -221,6 +221,13 @@ def plot_states_no_time(ts_vals, states):
 plot_states_no_time(res[1:100], hidden_states[1:100])
 ```
 
+In spite of fitting the original data correctly, the models ability to indicate any insight into the future seems dubious.
+
 ```{python}
 transmat
 ```
+
+You can see the data samples from the fitted HMM produces a `transmat` which is quite different from the one of the data. This is one reason to believe it is unlikely a good tool to simulate with.
+
+
+HMM is another example of how you can try break down a single signal into parts that can potentially tell a story. In Structural Time Series analysis, you had various components (level, trend, seasona, cyclic) but here you can have another view in terms of states.
