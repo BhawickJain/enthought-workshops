@@ -1,0 +1,143 @@
+---
+jupyter:
+  jupytext:
+    formats: ipynb,Rmd
+    text_representation:
+      extension: .Rmd
+      format_name: rmarkdown
+      format_version: '1.2'
+      jupytext_version: 1.11.3
+  kernelspec:
+    display_name: Python 3
+    language: python
+    name: python3
+---
+
+# Extracting metadata information from a satellite image
+
+
+
+```{python}
+# use rasterio to open a 3-band (red, green, blue) PlanetScope visual asset
+
+import rasterio
+satdat = rasterio.open("20160831_180302_0e26_3B_Visual.tif")
+```
+
+```{python}
+# Minimum bounding box in projected units
+
+print(satdat.bounds)
+```
+
+`[?]` What exactly is GeoTIFF and how it is different from TIFF, PNG or JPEG?
+
+```{python}
+# Get dimensions, in map units (using the example GeoTIFF, that's meters)
+
+width_in_projected_units = satdat.bounds.right - satdat.bounds.left
+height_in_projected_units = satdat.bounds.top - satdat.bounds.bottom
+
+print("Width: {}, Height: {}".format(width_in_projected_units, height_in_projected_units))
+```
+
+```{python}
+# Number of rows and columns.
+
+print("Rows: {}, Columns: {}".format(satdat.height, satdat.width))
+```
+
+```{python}
+# This dataset's projection uses meters as distance units.  What are the dimensions of a single pixel in meters?
+
+xres = (satdat.bounds.right - satdat.bounds.left) / satdat.width  # satdat.width in Pixels
+yres = (satdat.bounds.top - satdat.bounds.bottom) / satdat.height
+
+print(xres, yres)
+print("Are the pixels square: {}".format(xres == yres))
+```
+
+```{python}
+# Get coordinate reference system
+
+satdat.crs
+```
+
+[spatialreference.org](http://spatialreference.org) use the epsg code to search the code and get the respective reference system.
+
+This one is WGS 84 / UTM zone 10N
+
+```{python}
+# Convert pixel coordinates to world coordinates.
+
+# Upper left pixel
+row_min = 0
+col_min = 0
+
+# Lower right pixel.  Rows and columns are zero indexing.
+row_max = satdat.height - 1
+col_max = satdat.width - 1
+
+# Transform coordinates with the dataset's affine transformation.
+# converts from pixel coordinates to coordinate reference system 
+topleft = satdat.transform * (row_min, col_min)
+botright = satdat.transform * (row_max, col_max)
+
+print("Top left corner coordinates: {}".format(topleft))
+print("Bottom right corner coordinates: {}".format(botright))
+```
+
+Notice how they are the same coordinates as the bounding box
+
+```{python}
+# All of the metadata required to create an image of the same dimensions, datatype, format, etc. is stored in
+# the dataset's profile:
+
+satdat.profile
+```
+
+`[?]` why is the `'count'` 4? If it represents Bands it should be 3.
+
+
+## File Compression
+
+Raster datasets use **compression** to reduce filesize. There are a number of compression methods, all of which fall into two categories: lossy and lossless. _Lossless_ compression methods retain the original values in each pixel of the raster, while _lossy_ methods result in some values being removed. Because of this, lossy compression is generally not well-suited for analytic purposes, but can be very useful for reducing storage size of visual imagery.
+
+All Planet data products are available as GeoTIFFs using lossless LZW compression. By creating a lossy-compressed copy of a visual asset, we can significantly reduce the dataset's filesize. In this example, we will create a copy using the "JPEG" lossy compression method:
+
+```{python}
+import os
+from humanize import naturalsize as sz
+
+# returns size in bytes
+size = os.path.getsize("20160831_180302_0e26_3B_Visual.tif")
+
+# output a human-friendly size
+print(sz(size))
+```
+
+## Copying a dataset 
+
+```{python}
+# read all bands from source dataset into a single 3-dimensional ndarray
+
+data = satdat.read()
+```
+
+```{python}
+# write new file using profile metadata from original dataset
+# and specifying JPEG compression
+
+profile = satdat.profile
+profile['compress'] = 'JPEG'
+
+with rasterio.open('compressed.tif', 'w', **profile) as dst:
+    dst.write(data)
+```
+
+### Lossy compression results
+
+```{python}
+new_size = os.path.getsize("compressed.tif")
+print(sz(new_size))
+```

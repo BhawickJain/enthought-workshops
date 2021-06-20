@@ -1,0 +1,55 @@
+---
+jupyter:
+  jupytext:
+    formats: ipynb,Rmd
+    text_representation:
+      extension: .Rmd
+      format_name: rmarkdown
+      format_version: '1.2'
+      jupytext_version: 1.11.3
+  kernelspec:
+    display_name: Python 3
+    language: python
+    name: python3
+---
+
+# Getting all setup
+The following setup will install all necessary libraries and setups for jupyter notebooks and extensions
+
+```{python}
+# !pip install ipyleaflet
+# !pip install ipywidgets
+# !pip install ipyvolume
+# !pip install altair
+# !pip install vega_datasets
+# !pip install bqplot
+# !pip install nbdime
+# !pip install palettable
+# !pip install earthengine-api
+# !pip install folium
+```
+
+```{bash}
+jupyter labextension install jupyter-leaflet
+jupyter labextension install @jupyter-widgets/jupyterlab-manager
+jupyter nbextension install --py --symlink --sys-prefix ipyleaflet
+jupyter nbextension enable --py --sys-prefix ipyleaflet
+jupyter labextension install js
+jupyter labextension install ipyvolume
+jupyter nbextension enable --py --sys-prefix widgetsnbextension
+jupyter labextension install @jupyter-widgets/jupyterlab-manager
+jupyter nbextension enable --py widgetsnbextension --sys-prefix
+jupyter labextension install bqplot
+jupyter nbextension install bqplot --py --symlink --sys-prefix
+jupyter nbextension enable --py --sys-prefix bqplot
+```
+
+## Authenticate Earth Engine and Get Setup
+
+```{python}
+# !earthengine authenticate --quiet
+```
+
+```{python}
+# !earthengine authenticate --code-verifier=h9akw5uDrBaM7YZ9Gv3zUNFmkqMe84bbmuwMdZmn-mg --authorization-code=4/1AY0e-g4yIJ7_lV_K9TEhZ1guiowU82exqXOXLmtTPxML8gSng4SX21vcbVQ
+```

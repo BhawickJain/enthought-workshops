@@ -1,0 +1,29 @@
+---
+jupyter:
+  jupytext:
+    formats: ipynb,Rmd
+    text_representation:
+      extension: .Rmd
+      format_name: rmarkdown
+      format_version: '1.2'
+      jupytext_version: 1.11.3
+  kernelspec:
+    display_name: Python 3
+    language: python
+    name: python3
+---
+
+```{python}
+# download 4-Band Analytic PlanetScope asset
+# !curl -O -J https://hello.planet.com/data/s/UG2TX98suVmmi9q/download
+```
+
+```{python}
+# download XML metadata
+# !curl -O -J https://hello.planet.com/data/s/jqDQE8xUHiD511e/download
+```
+
+```{python}
+# download 3-Band Visual PlanetScope asset
+# !curl -O -J https://hello.planet.com/data/s/ZWwAg1RcmIN5h9R/download
+```

@@ -1,0 +1,85 @@
+---
+jupyter:
+  jupytext:
+    formats: ipynb,Rmd
+    text_representation:
+      extension: .Rmd
+      format_name: rmarkdown
+      format_version: '1.2'
+      jupytext_version: 1.11.3
+  kernelspec:
+    display_name: Python 3
+    language: python
+    name: python3
+---
+
+# Reading satellite data with rasterio
+
+
+## Loading a dataset
+
+```{python}
+import rasterio
+
+# This notebook explores a single 4 band (blue, green, red, NIR) PlanetScope scene in a UTM projection.
+image_file = "20190321_174348_0f1a_3B_AnalyticMS.tif"
+
+satdat = rasterio.open(image_file)
+```
+
+```{python}
+# satdat is our open dataset object
+print(satdat)
+
+# let's look at some basic information about this geoTIFF:
+
+# dataset name
+print(satdat.name)
+
+# number of bands in this dataset
+print(satdat.count)
+```
+
+## Parsing bands
+
+```{python}
+# The dataset reports a band count.
+print(satdat.count)
+
+# And provides a sequence of band indexes.  These are one indexing, not zero indexing like Numpy arrays.
+print(satdat.indexes)
+```
+
+By convention the bands are indexed from 1, so its why rasterio does this from the start.
+
+
+Because we know we're look at a PlanetScope 4-band analytic satellite image, we can define the bands by their order:
+
+```{python}
+# PlanetScope 4-band band order: BGRN
+
+blue, green, red, nir = satdat.read()
+
+# Or the slightly less efficient:
+#    blue = satdat.read(1)
+#    green = satdat.read(2)
+#    red = satdat.read(3)
+#    nir = satdat.read(4)
+
+# Or read the entire dataset into a single 3D array:
+#    data = satdat.read()
+```
+
+```{python}
+# each band is stored as a numpy array, and its values are a numpy data type
+print(blue.dtype)
+```
+
+```{python}
+# using the blue band as an example, examine the width & height of the image (in pixels)
+
+w = blue.shape[0]
+h = blue.shape[1]
+
+print("width: {w}, height: {h}".format(w=w, h=h))
+```
