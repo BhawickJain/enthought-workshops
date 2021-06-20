@@ -11,5 +11,11 @@ Workshops by [Enthought](https://www.enthought.com) involving scientific computi
 TODO
 `[x]`  See what each of the requirements.txt contains why they are needed  
 
+## Usage
+
+1. Drop all the contents of one the workshope into the workspace
+2. `docker compose up`
+3. `docker compose down --rmi all -v` when you're done.
+
 
 
