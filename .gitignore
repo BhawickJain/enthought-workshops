@@ -5,3 +5,6 @@ studylog.md
 .Trash*
 **/__pycache__/
 **/resultsDir/
+**.tif
+**.png
+
