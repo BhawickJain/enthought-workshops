@@ -38,3 +38,13 @@ After that, start Jupyter:
 
 From within the Notebook interface, change the kernel (`Kernel --> Change
 Kernel --> <name of venv>`) to use the newly created project kernel.
+
+
+## References
+
+[[Remote Sensing with Python — Planet](https://github.com/sarasafavi/remote-sensing-with-python)]
+[[Global Forest Loss/Gain](https://glad.earthengine.app/view/global-forest-change#dl=1;old=0;bl=off;lon=-273.15929399865587;lat=33.2275910817808;zoom=4;)]
+[[Google Earth Engine](https://code.earthengine.google.com)]
+[[Pandgeo](https://pangeo.io/quickstart.html)]
+[[Google Earth Engine Catalogue](https://developers.google.com/earth-engine/datasets?hl=en)]
+[[Remote Sensing Index Database](https://www.indexdatabase.de/db/i.php)]
