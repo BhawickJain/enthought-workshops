@@ -17,5 +17,9 @@ TODO
 2. `docker compose up`
 3. `docker compose down --rmi all -v` when you're done.
 
+### notes
+
+1. For `network-analysis-made-simply` uncomment the `COPY setup.py` line in `Dockerfile`.
+
 
 
