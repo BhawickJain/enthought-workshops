@@ -1,0 +1,89 @@
+site_name: Network Analysis Made Simple
+site_url: https://ericmjl.github.io/Network-Analysis-Made-Simple
+
+docs_dir: notebooks/
+
+theme:
+  name: "material"
+  palette:
+    primary: "indigo"
+    accent: "indigo"
+  icon:
+    logo: "fontawesome/solid/book"
+  features:
+    - instant
+    # - tabs
+  language: en
+
+# We customize the navigation by hand to control the order
+# in which pages show up.
+nav:
+  - Network Analysis Made Simple:
+      - Welcome: index.md
+  - Preface:
+      - Get Setup: 00-preface/01-setup.md
+      - Prerequisites: 00-preface/02-prereqs.ipynb
+      - Learning Goals: 00-preface/03-goals.md
+  - "Section 1: Introduction":
+      - "Chapter 1: Introduction to Graphs": 01-introduction/01-graphs.ipynb
+      - "Chapter 2: The NetworkX API": 01-introduction/02-networkx-intro.ipynb
+      - "Chapter 3: Graph Visualization": 01-introduction/03-viz.ipynb
+  - "Section 2: Algorithms":
+      - "Chapter 4: Hubs": 02-algorithms/01-hubs.ipynb
+      - "Chapter 5: Paths": 02-algorithms/02-paths.ipynb
+      - "Chapter 6: Structures": 02-algorithms/03-structures.ipynb
+  - "Section 3: Practical Matters":
+      - "Chapter 7: Graph I/O": 03-practical/01-io.ipynb
+      - "Chapter 8: Testing": 03-practical/02-testing.ipynb
+  - "Section 4: Advanced Topics":
+      - "Chapter 9: Bipartite Graphs": 04-advanced/01-bipartite.ipynb
+      - "Chapter 10: Linear Algebra": 04-advanced/02-linalg.ipynb
+      - "Chapter 11: Statistical Inference": 04-advanced/03-stats.ipynb
+  - "Section 5: Case Studies":
+      - "Chapter 12: Game of Thrones": 05-casestudies/01-gameofthrones.ipynb
+      - "Chapter 13: Airport Network": 05-casestudies/02-airport.ipynb
+  - Further Learning: learn-more.md
+  - "Development":
+      - "Style Guide": devdocs/style.md
+
+plugins:
+  - search
+  - mknotebooks:
+      execute: true
+      write_markdown: true
+      allow_errors: false
+      timeout: 1200
+      binder: true
+      binder_service_name: "gh"
+      binder_branch: "master"
+      binder_ui: "lab"
+
+# Taken from here: https://squidfunk.github.io/mkdocs-material/extensions/codehilite/
+markdown_extensions:
+  - codehilite
+  - admonition
+  - pymdownx.tabbed
+  - pymdownx.arithmatex
+  - pymdownx.details
+  - pymdownx.superfences
+  - markdown.extensions.attr_list
+
+extra_javascript:
+  - https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML
+  - https://hypothes.is/embed.js
+
+extra_css:
+  - css/nb_mods.css
+  - css/apidocs.css
+
+repo_name: "ericmjl/Network-Analysis-Made-Simple"
+repo_url: "https://github.com/ericmjl/Network-Analysis-Made-Simple"
+
+extra:
+  social:
+    - icon: "fontawesome/brands/github"
+      link: "https://github.com/ericmjl"
+    - icon: "fontawesome/brands/twitter"
+      link: "https://twitter.com/ericmjl"
+    - icon: "fontawesome/brands/linkedin"
+      link: "https://linkedin.com/in/ericmjl"
