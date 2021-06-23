@@ -336,7 +336,13 @@ Naturally, this leads us to our next exercise.
 from nams.solutions.intro import edge_metadata
 
 #### REPLACE THE NEXT LINE WITH YOUR ANSWER
-maxcount = edge_metadata(G)
+# maxcount = edge_metadata(G)
+
+import pandas as pd
+df = pd.DataFrame(G.edges(data=True))
+df['count'] = df[2].apply(lambda x: x['count'])
+df = df[[0,1,'count']]
+df[].max('count')
 ```
 
 Likewise, you can test your answer using the test function below:
