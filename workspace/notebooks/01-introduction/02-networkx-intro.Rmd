@@ -517,9 +517,17 @@ _Hint: You may need the class method `G.has_edge(n1, n2)`. This returns whether 
 from nams.solutions.intro import unrequitted_friendships_v1
 #### REPLACE THE NEXT LINE WITH YOUR ANSWER
 unrequitted_friendships = []
-for sr, sk in G.edges():
-    if not G.has_edge(sk, sr):
-        unrequitted_friendships.append((sr,sk))
+# for sr, sk in G.edges():
+#     if not G.has_edge(sk, sr):
+#         unrequitted_friendships.append((sr,sk))
+        
+# list comprehension version        
+# [unrequitted_friendships.append((sr,sk)) for sr, sk in G.edges() if not G.has_edge(sk, sr)]
+
+# set version
+links = [(sr,sk) for sr, sk in G.edges()]
+reverse = [(sk,sr) for sr, sk in G.edges()]
+unrequitted_friendships = set(links) - set(reverse)
 
 # unrequitted_friendships = unrequitted_friendships_v1(G)
 assert len(unrequitted_friendships) == 124
