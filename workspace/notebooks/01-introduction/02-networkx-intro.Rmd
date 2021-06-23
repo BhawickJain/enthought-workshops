@@ -342,7 +342,7 @@ import pandas as pd
 df = pd.DataFrame(G.edges(data=True))
 df['count'] = df[2].apply(lambda x: x['count'])
 df = df[[0,1,'count']]
-df[].max('count')
+maxcount = df['count'].max()
 ```
 
 Likewise, you can test your answer using the test function below:
@@ -402,7 +402,11 @@ Knowing this gives you enough knowledge to tackle the next exercise.
 from nams.solutions.intro import adding_students
 
 #### REPLACE THE NEXT LINE WITH YOUR ANSWER
-G = adding_students(G)
+# G = adding_students(G)
+
+G.add_node(30, gender='male')
+G.add_node(31, gender='female')
+G.add_edge(30, 31, count=3)
 ```
 
 <!-- #region slideshow={"slide_type": "subslide"} -->
