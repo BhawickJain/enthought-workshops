@@ -182,14 +182,20 @@ def rank_order_neighbours(G):
     
     import pandas as pd
     
+    N = len(G.nodes)
+    
     s = pd.Series([len(list(G.neighbors(n))) for n in G.nodes])
     
-    s = s.sort_values(ascending=False)
+    s = s.sort_values(ascending=False)/(N-1
     
     return s
 
 answer = rank_order_neighbours(G)
     
+```
+
+```{python}
+answer
 ```
 
 The original implementation looked like the following
@@ -231,6 +237,28 @@ $$d = \frac{n}{N}$$
 NetworkX provides a function for us to calculate degree centrality conveniently:
 
 ```{python}
+def cust_deg_centrality(G):
+    '''
+    Takes a graph object G and returns an descending 
+    list of number of neighbours each nodes has.
+    
+    Params: G
+    
+    returns Pandas.Series
+    '''
+    
+    import pandas as pd
+    
+    N = len(G.nodes)
+    s = pd.Series([len(list(G.neighbors(n))) for n in G.nodes])
+    s = s.sort_values(ascending=False)/(N-1)
+    
+    return s
+                                        
+cust_deg_centrality(G)
+```
+
+```{python}
 import networkx as nx
 import pandas as pd
 dcs = pd.Series(nx.degree_centrality(G))
@@ -245,6 +273,9 @@ to make it easier to display.
 
 Incidentally, we can also sort the series
 to find the nodes with the highest degree centralities:
+
+
+`[ ]` Find out why the `cust_deg_centrality` function does not match the `nx.degree_centrality` result when the equation appears to be the same?
 
 ```{python}
 dcs.sort_values(ascending=False)
