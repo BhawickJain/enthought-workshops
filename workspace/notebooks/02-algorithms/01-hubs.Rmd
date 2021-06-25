@@ -183,10 +183,8 @@ def rank_order_neighbours(G):
     import pandas as pd
     
     N = len(G.nodes)
-    
     s = pd.Series([len(list(G.neighbors(n))) for n in G.nodes])
-    
-    s = s.sort_values(ascending=False)/(N-1
+    s = s.sort_values(ascending=False)
     
     return s
 
@@ -275,7 +273,8 @@ Incidentally, we can also sort the series
 to find the nodes with the highest degree centralities:
 
 
-`[ ]` Find out why the `cust_deg_centrality` function does not match the `nx.degree_centrality` result when the equation appears to be the same?
+`[x]` Find out why the `cust_deg_centrality` function does not match the `nx.degree_centrality` result when the equation appears to be the same?
+`[>]` They do match.
 
 ```{python}
 dcs.sort_values(ascending=False)
@@ -330,19 +329,26 @@ First do it for **degree centrality**:
 
 ```{python}
 from nams.functions import ecdf
-from nams.solutions.hubs import ecdf_degree_centrality
+import matplotlib.pyplot as plt
+# from nams.solutions.hubs import ecdf_degree_centrality
 
 #### REPLACE THE FUNCTION CALL WITH YOUR ANSWER
-ecdf_degree_centrality(G)
+# x,y = ecdf_degree_centrality(G)
+
+x,y = ecdf(pd.Series(nx.degree_centrality(G)))
+plt.plot(x,y)
 ```
 
 Now do it for **degree**:
 
 ```{python}
-from nams.solutions.hubs import ecdf_degree
+# from nams.solutions.hubs import ecdf_degree
 
 #### REPLACE THE FUNCTION CALL WITH YOUR ANSWER
-ecdf_degree(G)
+# ecdf_degree(G)
+
+x,y = ecdf(rank_order_neighbours(G))
+plt.plot(x,y)
 ```
 
 The fact that they are identically-shaped
