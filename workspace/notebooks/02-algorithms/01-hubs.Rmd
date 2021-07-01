@@ -192,6 +192,8 @@ answer = rank_order_neighbours(G)
     
 ```
 
+`[?]` What are valid inputs for the `pd.Series` and `pd.Dataframe` API?
+
 ```{python}
 answer
 ```
@@ -362,10 +364,12 @@ is "the number of nodes that a node could _possibly_ be connected to".
 Can you think of two ways $N$ be defined?
 
 ```{python}
-from nams.solutions.hubs import num_possible_neighbors
+# from nams.solutions.hubs import num_possible_neighbors
 
 #### UNCOMMENT TO SEE MY ANSWER
 # print(num_possible_neighbors())
+
+print("number of possible neighbours", N*(N-1))
 ```
 
 ### Exercise: Circos Plotting
