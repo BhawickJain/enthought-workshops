@@ -1,11 +1,17 @@
 """Solutions to Hubs chapter."""
 
+import matplotlib
 import matplotlib.pyplot as plt
 import networkx as nx
 import pandas as pd
 import nxviz as nv
 from nxviz.plots import CircosPlot
 # from nxviz import annotate
+
+nv.__version__ # 0.6.3
+nx.__version__ # 2.5.1
+pd.__version__ # 1.2.3
+matplotlib.__version__ # 3.4.1
 
 from nams import ecdf
 
