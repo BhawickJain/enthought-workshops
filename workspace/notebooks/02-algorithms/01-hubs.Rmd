@@ -160,15 +160,11 @@ Here are a few hints to help:
 - You could also consider using Python's `sorted` function.
 
 ```{python}
-help()
-```
-
-```{python}
-# from nams.solutions.hubs import rank_ordered_neighbors
+from nams.solutions.hubs import rank_ordered_neighbors
 
 #### REPLACE THE NEXT FEW LINES WITH YOUR ANSWER
-# answer = rank_ordered_neighbors(G)
-# answer
+answer = rank_ordered_neighbors(G)
+answer
 
 def rank_order_neighbours(G):
     '''
@@ -188,27 +184,24 @@ def rank_order_neighbours(G):
     
     return s
 
-answer = rank_order_neighbours(G)
+my_answer = rank_order_neighbours(G)
     
 ```
 
 `[?]` What are valid inputs for the `pd.Series` and `pd.Dataframe` API?
 
-```{python}
-answer
-```
 
 The original implementation looked like the following
 
 ```{python}
 from nams.solutions.hubs import rank_ordered_neighbors_original
-# # rank_ordered_neighbors_original??
+# rank_ordered_neighbors_original??
 ```
 
 And another implementation that uses generators:
 
 ```{python}
-from nams.solutions.hubs import rank_ordered_neighbors_generator
+# from nams.solutions.hubs import rank_ordered_neighbors_generator
 # # rank_ordered_neighbors_generator??
 ```
 
@@ -368,7 +361,7 @@ Can you think of two ways $N$ be defined?
 
 #### UNCOMMENT TO SEE MY ANSWER
 # print(num_possible_neighbors())
-
+N = len(G.nodes())
 print("number of possible neighbours", N*(N-1))
 ```
 
@@ -387,9 +380,18 @@ circos_plot(G)
 
 And here's an alternative view using an arc plot.
 
+```{python}
+# nv.ArcPlot??
+```
+
 ```{python tags=c()}
+import matplotlib.pyplot as plt
 import nxviz as nv
-nv.arc(G, sort_by="order", node_color_by="order")
+
+from nxviz.plots import ArcPlot
+a = ArcPlot(G)
+a.draw()
+plt.show()
 ```
 
 ### Exercise: Visual insights
