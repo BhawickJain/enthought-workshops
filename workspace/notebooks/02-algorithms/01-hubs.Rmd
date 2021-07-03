@@ -381,17 +381,21 @@ circos_plot(G)
 And here's an alternative view using an arc plot.
 
 ```{python}
-# nv.ArcPlot??
+max(list(G.nodes(data=True)))
 ```
 
 ```{python tags=c()}
 import matplotlib.pyplot as plt
-import nxviz as nv
+# import nxviz as nv
 
 from nxviz.plots import ArcPlot
-a = ArcPlot(G)
+a = ArcPlot(G, node_color="order", node_order="order")
 a.draw()
 plt.show()
+```
+
+```{python}
+# ArcPlot appears broken in Binder instance as well of the tutorial
 ```
 
 ### Exercise: Visual insights
@@ -404,7 +408,7 @@ what does this visualization tell you?
 from nams.solutions.hubs import visual_insights
 
 #### UNCOMMENT THE NEXT LINE TO SEE MY ANSWER
-# print(visual_insights())
+print(visual_insights())
 ```
 
 ### Exercise: Investigating degree centrality and node order
