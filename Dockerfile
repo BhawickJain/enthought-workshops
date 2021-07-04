@@ -8,5 +8,5 @@ COPY ./workspace/requirements.txt .
 COPY ./workspace/setup.py .
 
 
-RUN pip install jupyter && pip install jupytext
+RUN pip install jupyter && pip install jupyterlab && pip install jupytext
 RUN pip install --no-cache-dir -r requirements.txt
