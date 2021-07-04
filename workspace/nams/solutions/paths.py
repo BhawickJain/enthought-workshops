@@ -105,7 +105,7 @@ def path_exists_deque(node1, node2, G):
 
 
 import nxviz as nv
-from nxviz import annotate, highlights
+from nxviz import highlights
 
 
 def plot_path_with_neighbors(G, n1, n2):
@@ -117,13 +117,15 @@ def plot_path_with_neighbors(G, n1, n2):
     nodes = list(set(nodes))
 
     g = G.subgraph(nodes)
-    nv.arc(
+    a = nv.ArcPlot(
         g, sort_by="order", node_color_by="order", edge_aes_kwargs={"alpha_scale": 0.5}
     )
-    for n in path:
-        highlights.arc_node(g, n, sort_by="order")
-    for n1, n2 in zip(path[:-1], path[1:]):
-        highlights.arc_edge(g, n1, n2, sort_by="order")
+    a.draw()
+    plt.show()
+#     for n in path:
+#         highlights.arc_node(g, n, sort_by="order")
+#     for n1, n2 in zip(path[:-1], path[1:]):
+#         highlights.arc_edge(g, n1, n2, sort_by="order")
 
 
 def plot_degree_betweenness(G):
