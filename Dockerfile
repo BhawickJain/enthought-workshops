@@ -5,7 +5,8 @@ LABEL maintainer="bhawick@outlook.com"
 
 WORKDIR /usr/src/workspace
 COPY ./workspace/requirements.txt .
-COPY ./workspace/setup.py .
+# network analysis workshop
+#COPY ./workspace/setup.py .
 
 
 RUN pip install jupyter && pip install jupyterlab && pip install jupytext
