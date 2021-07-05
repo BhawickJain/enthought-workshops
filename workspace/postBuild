@@ -1,3 +1,0 @@
-# Docs: https://mybinder.readthedocs.io/en/latest/using/using.html#share-computational-work-or-papers
-# This script runs right after the environment is built.
-pip install -e .
