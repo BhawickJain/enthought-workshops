@@ -117,4 +117,7 @@ Also capable of vectorized (pair-wise) operation.
 `[?]` What are some of the python list-like and non-list-like behaviours of numpy arrays?  
 `[>]` Index notation and mutibility are list-like but type coercion and vectorized operations are non-list-like.
 
+## References
 
+`[numpy-internals-v1.21]`
+[[numpy-internals-v1.21](https://numpy.org/doc/stable/reference/internals.html)] Numpy Interals v1.21 Manual
