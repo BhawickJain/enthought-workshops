@@ -117,13 +117,9 @@ Also capable of vectorized (pair-wise) operation.
 `[?]` What are some of the python list-like and non-list-like behaviours of numpy arrays?  
 `[>]` Index notation and mutibility are list-like but type coercion and vectorized operations are non-list-like.
 
+Python arrays have a contiguous representation in memory with meta-data attached which descripes its interpretation. So for example, the type of the items and shape are meta-data and when the shape is changed with the `.reshape()` function, the data buffer is unchanged. This is very efficient and computationally affordable [[1]](#1).
+
 ## References
 
-<a id="1">[numpy-internals-v1.21]</a> 
-Dijkstra, E. W. (1968). 
-Go to statement considered harmful. 
-Communications of the ACM, 11(3), 147-148.
-
-`[numpy-internals-v1.21]`
-[numpy-internals-v1.21]:https://numpy.org/doc/stable/reference/internals.html
-Numpy Interals v1.21 Manual
+<a id="1">[1]</a> 
+Numpy Interals v1.21 Manual [URL](https://numpy.org/doc/stable/reference/internals.html)
