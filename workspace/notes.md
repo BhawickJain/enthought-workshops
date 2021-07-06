@@ -119,5 +119,11 @@ Also capable of vectorized (pair-wise) operation.
 
 ## References
 
+<a id="1">[numpy-internals-v1.21]</a> 
+Dijkstra, E. W. (1968). 
+Go to statement considered harmful. 
+Communications of the ACM, 11(3), 147-148.
+
 `[numpy-internals-v1.21]`
-[[numpy-internals-v1.21](https://numpy.org/doc/stable/reference/internals.html)] Numpy Interals v1.21 Manual
+[numpy-internals-v1.21]:https://numpy.org/doc/stable/reference/internals.html
+Numpy Interals v1.21 Manual
