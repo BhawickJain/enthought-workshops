@@ -6,7 +6,7 @@ author:
 or: 20210706194228
 ---
 
-Github Repo: https://github.com/enthought/numpy-tutorial-scipyconf-2019
+Github Repo: [[ChabotGh-Workshop](#ChabotGh-Workshop)]
 
 Simple problem statement
 
@@ -107,7 +107,7 @@ a * 10
 
 This means you are not doing standard matrix operations, instead this conceptual iteration is referred to a vectorized operation
 
-Numpy provides Universal Functions (ufuncs)
+Numpy provides Universal Functions (aka UFuncs)
 
 ```python
 np.sin(a)
@@ -119,7 +119,12 @@ Also capable of vectorized (pair-wise) operation.
 
 Python arrays have a contiguous representation in memory with meta-data attached which describes its interpretation. So for example, the type of the items and shape are meta-data and when the shape is changed with the `.reshape()` function, the data buffer is unchanged. This is very efficient and computationally affordable [[Nump-Man-Internals]](#Nump-Man-Internals).
 
+
 ## References
 
 <a id="Nump-Man-Internals">[Nump-Man-Internals]</a> 
-Numpy Interals v1.21 Manual [URL](https://numpy.org/doc/stable/reference/internals.html)
+Numpy Interals v1.21 Manual [[URL](https://numpy.org/doc/stable/reference/internals.html)]
+
+<a id="ChabotGh-Workshop">[ChabotGh-Workshop]</a> 
+Introduction to Numerical Computing with NumPy Workshop - Github Repo — Alex Chabot-Leclerc [[URL](https://numpy.org/doc/stable/reference/internals.html)]
+
