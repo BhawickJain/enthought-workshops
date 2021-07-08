@@ -83,7 +83,7 @@ a.ndim
 a.shape
 # (4,)
 ```
-The `.shape` returns a tuple.
+The `.shape` returns a tuple, the lenght of tuple represents the number of dimensions.
 
 ```python 
 
