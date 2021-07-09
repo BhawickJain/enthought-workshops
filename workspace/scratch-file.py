@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # ! pip install numpy
 
 # +
@@ -28,16 +29,17 @@ g.dtype
 # ufuncs (Universal Functions)
 
 np.sin(a)
-array([-0.99999021,  0.90929743,  0.14112001, -0.7568025 ])
+# array([-0.99999021,  0.90929743,  0.14112001, -0.7568025 ])
 
 # +
 # Elementwise application of the function.
 # -
 
 # Array Indexing
-#
+# ```
 # | 11 | 22 | 34 |
-# 0    1    2    3 
+# 0    1    2    3 ... Index
+# ```
 
 # +
 # Two Dimensinoal Array
@@ -65,6 +67,7 @@ a[:, 1]
 
 # a[ axis=0, axis=1, ... axis=n ] Whatever remains comes out as an array
 
+# ```
 #     0
 #    /
 #   /
@@ -75,6 +78,7 @@ a[:, 1]
 # |
 # |
 # 1
+# ```
 
 b = np.array([[[1,2,3], [1,2,3], [1,2,3]], [[4, 5, 6], [4, 5, 6], [4, 5, 6]], [[7, 8, 9], [7, 8, 9], [7, 8, 9]]])
 
@@ -114,6 +118,8 @@ a[:,-2: ]
 a[:, ::2]
 
 # Select last column of every other column
+
+a[:, ::2][:, -1]
 
 a[:, ::2][:, -1:]
 
@@ -175,7 +181,15 @@ e = np.arange(0,6)
 
 e[1:-2]
 
-# This would always return the last two elements
+# This would always§ return the last two elements
 e[-2:]
 
+a[:, ::2]
+
 # `[?]` What is the pattern here? What set of slicing notations guarantee a certain size is return and which don't?
+
+a[:, [1, -1]]
+
+np.arange(25).reshape(5, 5)
+
+
