@@ -9,5 +9,6 @@ COPY ./workspace/requirements.txt .
 #COPY ./workspace/setup.py .
 
 
+RUN apt update && apt-get install -y nodejs && apt-get install -y npm
 RUN pip install jupyter && pip install jupyterlab && pip install jupytext
 RUN pip install --no-cache-dir -r requirements.txt

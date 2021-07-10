@@ -268,6 +268,8 @@ array([[-4, 4, -4, 4],
        [-4, 4, -4, 4]])
 ```
 
+`[?]` Do you need to match the shape of the array say when assigning `a[:, 1:2]`?  
+
 ## References
 
 <a id="Nump-Man-Internals">[Nump-Man-Internals]</a> 
