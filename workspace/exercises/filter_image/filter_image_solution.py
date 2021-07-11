@@ -47,47 +47,47 @@ def smooth_loop(img):
                              ) / 5.0
     return smoothed
 
+def run_sol():
+    img = plt.imread('dc_metro.png')
+    avg_img = smooth(img)
 
-img = plt.imread('dc_metro.png')
-avg_img = smooth(img)
+    plt.figure()
+    # Set colormap so that images are plotted in gray scale.
+    plt.gray()
+    # Plot the original image first
+    plt.subplot(1,3,1)
+    plt.imshow(img)
+    plt.title('original')
 
-plt.figure()
-# Set colormap so that images are plotted in gray scale.
-plt.gray()
-# Plot the original image first
-plt.subplot(1,3,1)
-plt.imshow(img)
-plt.title('original')
+    # Now the filtered image.
+    plt.subplot(1,3,2)
+    plt.imshow(avg_img)
+    plt.title('smoothed once')
 
-# Now the filtered image.
-plt.subplot(1,3,2)
-plt.imshow(avg_img)
-plt.title('smoothed once')
-
-# And finally the difference between the two.
-plt.subplot(1,3,3)
-plt.imshow(img[1:-1,1:-1] - avg_img)
-plt.title('difference')
+    # And finally the difference between the two.
+    plt.subplot(1,3,3)
+    plt.imshow(img[1:-1,1:-1] - avg_img)
+    plt.title('difference')
 
 
-# Bonus: Re-filter the image by passing the result image
-#        through the filter again.  Do this 50 times and plot
-#        the resulting image.
+    # Bonus: Re-filter the image by passing the result image
+    #        through the filter again.  Do this 50 times and plot
+    #        the resulting image.
 
-for num in range(50):
-    avg_img = smooth(avg_img)
+    for num in range(50):
+        avg_img = smooth(avg_img)
 
-# Plot the original image first
-plt.figure()
-plt.subplot(1,2,1)
-plt.imshow(img)
-plt.title('original')
+    # Plot the original image first
+    plt.figure()
+    plt.subplot(1,2,1)
+    plt.imshow(img)
+    plt.title('original')
 
-# Now the filtered image.
-plt.subplot(1,2,2)
-plt.imshow(avg_img)
-plt.title('smoothed 50 times')
+    # Now the filtered image.
+    plt.subplot(1,2,2)
+    plt.imshow(avg_img)
+    plt.title('smoothed 50 times')
 
-assert np.allclose(smooth(img), smooth_loop(img))
+    assert np.allclose(smooth(img), smooth_loop(img))
 
-plt.show()
+    plt.show()
