@@ -123,7 +123,6 @@ array([-0.99999021,  0.90929743,  0.14112001, -0.7568025 ])
 `[?]` What are some of the python list-like and non-list-like behaviours of numpy arrays?  
 `[>]` Index notation and mutibility are list-like but type coercion and vectorized operations are non-list-like.
 
-Python arrays have a contiguous representation in memory with meta-data attached which describes its interpretation. So for example, the type of the items and shape are meta-data and when the shape is changed with the `.reshape()` function, the data buffer is unchanged. This is very efficient and computationally affordable [[Nump-Man-Internals](#Nump-Man-Internals)].
 
 ### Slicing
 
@@ -488,12 +487,12 @@ You need to specify an axis, inorder to prevent this.
 
 Other reduce functions
 
-```
-a = np.array([[1,2,3],
+```python
+>>> a = np.array([[1,2,3],
               [4,5,6]])
-
+```
 # Mathematical Functions
-
+```
 >>> a.sum()
 21
 
@@ -594,31 +593,59 @@ True
 
 >>> np.array([0,-10,0]).any() # non-zero are considered true
 True
-
 ```
+
 
 Most NumPy function can be used as methods, `a.min()` and as functions `np.min(a)`. Generally methods run faster. Most also have Axis options availble to limit / manage the reduction process. 
 
-### NumPy Memory Representation
+## NumPy Memory Representation
+NumPy arrays have a contiguous representation in memory (much standard Python Arrays) with an additional meta-data attached which describes its interpretation. 
 
-metdata
+Some examples of metdata
 - dtype
 - data (pointer to the first item in the array)
 - strides (the number elements it needs to jump to go the next item in a specific direction of a dimension)
 
-Transpose operation
+So for example, the type of the items and shape are meta-data and when the shape is changed with the `.reshape()` function, the data buffer is unchanged - instead the strides change.This is very efficient and computationally affordable [[Nump-Man-Internals](#Nump-Man-Internals)].
+
+```
+ | 11 | 22 | 34 | 35 | 40 | 41 |   ... data
+ 0    1    2    3    4    5    6   ... Index
+ a8   a9   aa   ab   ac   ad   ae  ... Memory Address
+
+Interpretation
+~~~~~~~~~~~~~~~~~~~~
+
+array([[11, 22, 34],
+       [35, 40, 41]])
+
+Metadata
+————————
+Strides: axis 0: 4
+         axis 1: 1
+
+Shape: (3, 2)
+
+Data Pointer: a8
+
+
+```
+
+## Transpose operation
 ```
 a.T
 ```
-The shape will and flipped, along with the strides whilst keep the number of dimension is the same. The memory allocation is not affects, just the strides change.
+In a transpose operation, the `np.array.shape` tuple and the `np.array.strides` will swap axes.
+`[?]` Does that mean as certain shapes, it maybe suboptimate to do an operation as the dimension you are working on has much larger strides?  
 
-Slice
+## Slice
 ```
 a[:, ::2]
 ```
+The Data Pointer for the start in Memory does not change, but the strides triple in axis 1 to only show every third column value.
 data pointer won't change, the strides will triple in the example. Change in shape and data pointer can be changed by index.
 
-Fancy indexing
+## Fancy indexing
 
 In fancy indexing a new array is created.
 `[?]` Does that make fancy indexing expensive?
@@ -626,7 +653,6 @@ In fancy indexing a new array is created.
 Reshaping is free.
 
 ### Flattening Arrays
-
 `[?]` When will the `ravel` function return a copy of an array and when it won't?
 `[?]` What is the difference between the Flatten and Ravel function?  
 
