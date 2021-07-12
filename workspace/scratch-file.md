@@ -564,5 +564,26 @@ a.where(mask)
 ```
 
 ```python
+import numpy as np
 
+a = np.array([[11, 22, 34],
+              [35, 40, 41]])
+
+a.strides
+```
+
+```python
+a.T
+```
+
+```python
+a.T.strides
+```
+
+```python
+a.dtype.metadata
+```
+
+```python
+a[:, ::2]
 ```
