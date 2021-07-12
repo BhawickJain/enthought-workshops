@@ -598,7 +598,9 @@ True
 
 Most NumPy function can be used as methods, `a.min()` and as functions `np.min(a)`. Generally methods run faster. Most also have Axis options availble to limit / manage the reduction process. 
 
+
 ## NumPy Memory Representation
+
 NumPy arrays have a contiguous representation in memory (much standard Python Arrays) with an additional meta-data attached which describes its interpretation. 
 
 Some examples of metdata
@@ -639,7 +641,7 @@ ndim: 2
 
 ```
 
-## Transpose operation
+### Transpose operation
 ```
 a.T
 ```
@@ -661,14 +663,16 @@ array([[11, 35],
 (8, 24)
 ```
 
-## Slice
-```
-a[:, ::2]
+### Slice
+```python
+>>> a[:, ::2]
+array([11, 34],
+      [35, 41])
 ```
 The Data Pointer for the start in Memory does not change, but the strides triple in axis 1 to only show every third column value.
 data pointer won't change, the strides will triple in the example. Change in shape and data pointer can be changed by index.
 
-## Fancy indexing
+### Fancy indexing
 
 In fancy indexing a new array is created.
 `[?]` Does that make fancy indexing expensive?
@@ -678,6 +682,7 @@ Reshaping is free.
 ### Flattening Arrays
 `[?]` When will the `ravel` function return a copy of an array and when it won't?
 `[?]` What is the difference between the Flatten and Ravel function?  
+
 
 ## References
 
