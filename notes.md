@@ -609,9 +609,14 @@ Some examples of metdata
 So for example, the type of the items and shape are meta-data and when the shape is changed with the `.reshape()` function, the data buffer is unchanged - instead the strides change.This is very efficient and computationally affordable [[Nump-Man-Internals](#Nump-Man-Internals)].
 
 ```
+Data
+————
+
  | 11 | 22 | 34 | 35 | 40 | 41 |   ... data
  0    1    2    3    4    5    6   ... Index
+ 0    64   128  192  256  320  384 ... bytes (int64)
  a8   a9   aa   ab   ac   ad   ae  ... Memory Address
+
 
 Interpretation
 ~~~~~~~~~~~~~~~~~~~~
@@ -628,6 +633,9 @@ Shape: (3, 2)
 
 Data Pointer: a8
 
+Item size: dtype
+
+ndim: 2
 
 ```
 
@@ -637,6 +645,21 @@ a.T
 ```
 In a transpose operation, the `np.array.shape` tuple and the `np.array.strides` will swap axes.
 `[?]` Does that mean as certain shapes, it maybe suboptimate to do an operation as the dimension you are working on has much larger strides?  
+
+```python
+>>> a = np.array([[11, 22, 34],
+              [35, 40, 41]])
+>>> a.strides
+(24, 8)
+
+>>> a.T
+array([[11, 35],
+       [22, 40],
+       [34, 41]])
+
+>>> a.T.strides
+(8, 24)
+```
 
 ## Slice
 ```
