@@ -14,27 +14,32 @@ More detailed instructions for using conda to install libraries can be found at
 # Alternative
 If for whatever reason Anaconda does not work, you can install Matplotlib using the pip package installer. First open a command line or terminal prompt and then type:
 ```bash
-python -m pip install -U pip
-python -m pip install -U matplotlib
-python -m pip install -U pandas
+!pip install -U pip
+!pip install -U matplotlib
+!pip install -U pandas
 ```
 
 # Test Install
 To test the install, please open a Jupyter notebook and type the following in a cell:
 
-```python
+```bash
+# %%python
 %matplotlib inline
+import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
 df = pd.read_csv("http://bit.ly/tscv17")
+```
+
+```bash
 fig, ax = plt.subplots()
 _ = ax.plot(np.sort(df['Age']), 'o')
 ```
 
 Then execute the cell and this figure should appear:
 
-![scatter plot, image should look like dots curving upward](images/install.png?)
+![scatter plot, image should look like dots curving upward](./images/install.png)
 
 
 
