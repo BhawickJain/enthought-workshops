@@ -23,6 +23,11 @@ If for whatever reason Anaconda does not work, you can install Matplotlib using 
 To test the install, please open a Jupyter notebook and type the following in a cell:
 
 ```bash
+%config InlineBackend.figure_format = 'svg'
+
+```
+
+```bash
 # %%python
 %matplotlib inline
 import numpy as np
