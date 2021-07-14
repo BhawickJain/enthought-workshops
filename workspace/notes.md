@@ -15,7 +15,7 @@ Preamble: Describes the purpose and context of the work.  Describe the purpose o
 
 `[?]` Aizenman prefers conda from the installation advice, why might that be?  
 
-Use the following magic to enable inline prints to be SVG instead of low resolutino PNG. YOu can also used `retina` to render high-res PNG prints [[SO-InlineLowQuality](#SO-InlineLowQuality)]. `retina` has more reliable export options.
+Use the following magic to enable inline prints to be SVG instead of low resolutino PNG. You can also used `retina` to render high-res PNG prints [[SO-InlineLowQuality](#SO-InlineLowQuality)]. `retina` has more reliable export options.
 
 ```python
 %config InlineBackend.figure_format = 'svg'
