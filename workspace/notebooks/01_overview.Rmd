@@ -308,11 +308,19 @@ _ = fig.suptitle('Quad (2x2)')
 
 ```{python slideshow={'slide_type': 'slide'}}
 fig, (ax1, ax2) = plt.subplots(ncols=2)
-_ = fig.suptitle("Titanic Data Set")
+_ = fig.suptitle('Titanic Dataset')
+_ = ax1.set_title ("Ages")
 _ = ax1.plot(np.sort(df['age']), marker='o', markersize=1)
 _ = ax1.set_ylabel("Ages")
 _ = ax1.set_yticks([15,25, 55, 64])
-_ = ax.plot(np.sort(df['fare']), marker='o', markersize=1)
+_ = ax1.set_yticklabels(['children (0-14)', 'youth (15-24)', 'adults (25-54)', 'seniors (55-100)'])
+_ = ax2.set_title("Fares")
+_ = ax2.plot(np.sort(df['fare']), marker='o', markersize=1)
+_ = ax2.set_yscale("log")
+_ = ax2.set_ylabel('Fare (£)')
+_ = ax2.set_yticks([3, 13, 30, 870])
+_ = ax2.set_yticklabels(['3rd', '2nd', '1st B', '1st S'])
+_ = ax2.set_xlabel(r'passengers $\theta$')
 _ = ax2.set_ylabel('Fare')
 ```
 
@@ -326,12 +334,20 @@ _ = ax2.set_ylabel('Fare')
 
 ```{python}
 fig, (ax1, ax2) = plt.subplots(ncols=2, constrained_layout=True)
-_ = fig.suptitle("Titanic Data Set")
+_ = fig.suptitle('Titanic Dataset')
+_ = ax1.set_title ("Ages")
 _ = ax1.plot(np.sort(df['age']), marker='o', markersize=1)
 _ = ax1.set_ylabel("Ages")
 _ = ax1.set_yticks([15,25, 55, 64])
+_ = ax1.set_yticklabels(['children (0-14)', 'youth (15-24)', 'adults (25-54)', 'seniors (55-100)'])
+_ = ax2.set_title("Fares")
+_ = ax2.plot(np.sort(df['fare']), marker='o', markersize=1)
+_ = ax2.set_yscale("log")
+_ = ax2.set_ylabel('Fare (£)')
+_ = ax2.set_yticks([3, 13, 30, 870])
+_ = ax2.set_yticklabels(['3rd', '2nd', '1st B', '1st S'])
+_ = ax2.set_xlabel(r'passengers $\theta$')
 _ = ax2.set_ylabel('Fare')
-# Exercise plote the fare data in the right axes
 ```
 
 <!-- #region slideshow={"slide_type": "slide"} -->
@@ -344,20 +360,68 @@ Here, we want one image to be much thinner than the second, so we will pass the 
 
 ```{python slideshow={'slide_type': 'slide'}}
 fig, (ax1, ax2) = plt.subplots(ncols=2, gridspec_kw={'width_ratios':[1,3]}, constrained_layout=True)
-_ = fig.suptitle ("Titanic Data Set")
+_ = fig.suptitle('Titanic Dataset')
+_ = ax1.set_title ("Ages")
 _ = ax1.plot(np.sort(df['age']), marker='o', markersize=1)
 _ = ax1.set_ylabel("Ages")
 _ = ax1.set_yticks([15,25, 55, 64])
+_ = ax1.set_yticklabels(['children (0-14)', 'youth (15-24)', 'adults (25-54)', 'seniors (55-100)'])
+_ = ax2.set_title("Fares")
+_ = ax2.plot(np.sort(df['fare']), marker='o', markersize=1)
+_ = ax2.set_yscale("log")
+_ = ax2.set_ylabel('Fare (£)')
+_ = ax2.set_yticks([3, 13, 30, 870])
+_ = ax2.set_yticklabels(['3rd', '2nd', '1st B', '1st S'])
+_ = ax2.set_xlabel(r'passengers $\theta$')
 _ = ax2.set_ylabel('Fare')
 ```
 
 <!-- #region slideshow={"slide_type": "slide"} -->
 # Practice:
 1. Flip-make the ages graph wider than the fares graph
+<!-- #endregion -->
+
+```{python}
+fig, (ax1, ax2) = plt.subplots(ncols=2, gridspec_kw={'width_ratios':[1,3]}, constrained_layout=True)
+_ = fig.suptitle('Titanic Dataset')
+_ = ax1.set_title ("Ages")
+_ = ax1.plot(np.sort(df['age']), marker='o', markersize=1)
+_ = ax1.set_ylabel("Ages")
+_ = ax1.set_yticks([15,25, 55, 64])
+_ = ax1.set_yticklabels(['children (0-14)', 'youth (15-24)', 'adults (25-54)', 'seniors (55-100)'])
+_ = ax2.set_title("Fares")
+_ = ax2.plot(np.sort(df['fare']), marker='o', markersize=1)
+_ = ax2.set_yscale("log")
+_ = ax2.set_ylabel('Fare (£)')
+_ = ax2.set_yticks([3, 13, 30, 870])
+_ = ax2.set_yticklabels(['3rd', '2nd', '1st B', '1st S'])
+_ = ax2.set_xlabel(r'passengers $\theta$')
+_ = ax2.set_ylabel('Fare')
+```
+
+<!-- #region slideshow={"slide_type": "slide"} -->
 2. Rotate: put the ages graph on top of the fares graph
 3. Top-heavy: in the vertical orientation from 2, make the ages graph larger 
     + hint: there's a `height_ratios` gridspec_kw
 <!-- #endregion -->
+
+```{python}
+fig, (ax1, ax2) = plt.subplots(nrows=2, gridspec_kw={'height_ratios':[5,4]}, constrained_layout=True, figsize=(3,8))
+_ = fig.suptitle('Titanic Dataset')
+_ = ax1.set_title ("Ages")
+_ = ax1.plot(np.sort(df['age']), marker='o', markersize=1)
+_ = ax1.set_ylabel("Ages")
+_ = ax1.set_yticks([15,25, 55, 64])
+_ = ax1.set_yticklabels(['children (0-14)', 'youth (15-24)', 'adults (25-54)', 'seniors (55-100)'])
+_ = ax2.set_title("Fares")
+_ = ax2.plot(np.sort(df['fare']), marker='o', markersize=1)
+_ = ax2.set_yscale("log")
+_ = ax2.set_ylabel('Fare (£)')
+_ = ax2.set_yticks([3, 13, 30, 870])
+_ = ax2.set_yticklabels(['3rd', '2nd', '1st B', '1st S'])
+_ = ax2.set_xlabel(r'passengers $\theta$')
+_ = ax2.set_ylabel('Fare')
+```
 
 ```{python}
 
