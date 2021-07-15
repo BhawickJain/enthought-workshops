@@ -255,6 +255,9 @@ df.head()
 <!-- #region slideshow={"slide_type": "skip"} -->
 Here we are going to compare the age of the passengers to the fare they paid, because we want to see if there is a correlation. Traditionally scatter plots are used for these types of plots. Scatter takes the x and y plot
 Scatter can show 4 dimensions of data as users can encode variables as the x and y positions, size and color of the markers in one call of the function, and you can modify the shape via multiple calls to scatter. 
+
+Comprehensive concept guide of Legends
+[[matplotlib-docs-legends](https://matplotlib.org/stable/tutorials/intermediate/legend_guide.html)]
 <!-- #endregion -->
 
 <!-- #region slideshow={"slide_type": "skip"} -->
