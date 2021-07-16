@@ -1,0 +1,258 @@
+---
+jupyter:
+  jupytext:
+    formats: ipynb,Rmd
+    text_representation:
+      extension: .Rmd
+      format_name: rmarkdown
+      format_version: '1.2'
+      jupytext_version: 1.11.3
+  kernelspec:
+    display_name: Python 3 (ipykernel)
+    language: python
+    name: python3
+---
+
+```{python}
+# %config InlineBackend.figure_format='svg'
+```
+
+<!-- #region slideshow={"slide_type": "slide"} -->
+# Let's make matplotlib do math...maybe
+<!-- #endregion -->
+
+<!-- #region slideshow={"slide_type": "slide"} -->
+First let's import the data and remake one of the figures from the [overview](01_overview.ipynb) notebook. 
+<!-- #endregion -->
+
+```{python slideshow={'slide_type': 'slide'}}
+# %matplotlib inline
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+df = pd.read_csv("http://bit.ly/tcsv19").dropna()
+```
+
+```{python slideshow={'slide_type': 'slide'}}
+fig, ax = plt.subplots()
+_ = ax.plot(np.sort(df['age']), marker='o', markersize=1)
+_ = ax.set(title='Passengers', ylabel='age')
+_ = ax.set_yticks([15,25, 55, 64])
+_ = ax.set_yticklabels(['children', 'youth', 'adults', 'seniors'])
+```
+
+<!-- #region slideshow={"slide_type": "skip"} -->
+The above figure is a expected cumulative distribution graph. It shows that most passengers are adults, but it is a bit hard to do comparisons, especially at the tales. Instead, we compute the histogram of passenger ages. 
+<!-- #endregion -->
+
+<!-- #region slideshow={"slide_type": "slide"} -->
+# Let's make Histograms
+<!-- #endregion -->
+
+<!-- #region slideshow={"slide_type": "skip"} -->
+Here we call the histogram function. Bins = 'auto' tries to find the optimal number of bins using methods described in the numpy [histogram docs](https://docs.scipy.org/doc/numpy/reference/generated/numpy.histogram_bin_edges.html#numpy.histogram_bin_edges). 
+<!-- #endregion -->
+
+```{python slideshow={'slide_type': 'slide'}}
+fig, ax = plt.subplots()
+(counts, edges, _) = ax.hist('age', bins='auto', data=df)
+```
+
+<!-- #region slideshow={"slide_type": "slide"} -->
+## Custom Bins to match our CDF
+<!-- #endregion -->
+
+<!-- #region slideshow={"slide_type": "skip"} -->
+In our line plot, we use bins based on the census-a commonly accepted binning for ages. We can pass those bins into our histogram function via the `bins` parameter. 
+[[matplotlib-docs-hist](https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.hist.html)]
+<!-- #endregion -->
+
+```{python slideshow={'slide_type': 'slide'}}
+fig, ax = plt.subplots()
+(counts, edges, _) = ax.hist('age', bins=[0, 15,25, 55, 64], data=df)
+_ = ax.set_xticks([0, 15,25, 55, 64])
+```
+
+```{python}
+fix, ax = plt.subplots()
+(counts, edges, _) = ax.hist('age', bins=[0, 15, 25, 55, 64, 100], data=df, edgecolor='white', align='right', rwidth=None)
+_ = ax.set_xticks([0, 15, 25, 55, 64, 100])
+```
+
+```{python}
+fig, ax = plt.subplots()
+(count, edges, _) = ax.hist('age', bins=[0, 15, 25, 55, 64, 100], data=df, histtype='step', hatch='/', color='black')
+_ = ax.set_xticks([0, 15, 25, 55, 64, 100])
+```
+
+`[?]` why do you need `r` in the `ylabel`?
+
+```{python}
+fig, ax = plt.subplots()
+(count, edges, _) = plt.hist([df[df['sex']=='male']['fare'],df[df['sex']=='female']['fare']], edgecolor='black', color=['black', 'white'], histtype='barstacked', stacked=True, hatch='//')
+# (count, edges, _) = plt.hist('fare', data=df[df['sex']=='female'], edgecolor='grey', color='grey', stacked=True)
+_ = ax.set_xticks='auto'
+_ = ax.set(xlabel='fares (£)', ylabel=r'passengers $\theta$')
+```
+
+<!-- #region slideshow={"slide_type": "slide"} -->
+### Probability density
+<!-- #endregion -->
+
+<!-- #region slideshow={"slide_type": "skip"} -->
+By default `ax.hist` returns the number in each bin and the bin edges used.  The bin edges array is 1 longer than the counts because it is all of the left bin edges and then right edge of the last bin.  This is useful when we need to compare absolute values between data sets, but sometime we need to be able to compare the probability density instead.  In the continuous limit, probability density has the condition:
+
+$$1 = \int_{-\infty}^{\infty} P(x)dx$$
+
+and in the discrete case:
+$$1 = \sum_{n=0}^N w_n p_n$$
+
+where $w_n$ is the width of the nth bin. We set the `density` parameter to true to plot the density of the data. 
+<!-- #endregion -->
+
+```{python slideshow={'slide_type': 'slide'}}
+fig, ax = plt.subplots()
+# only consider rows where we know the age
+(density, edges, _) = ax.hist('age', bins='auto', data=df, density=True, color='black', edgecolor='black')
+
+assert np.sum(np.diff(edges) * density) == 1
+```
+
+<!-- #region slideshow={"slide_type": "slide"} -->
+## Practice:
+1. Make histogram of fares
+2. Use the bins defined in the [overview](01_overview.ipynb)
+<!-- #endregion -->
+
+```{python slideshow={'slide_type': 'slide'}}
+fig, ax = plt.subplots()
+_ = ax.hist('fare', data=df, color='black', edgecolor='black', bins='auto', density=True)
+_ = ax.set(xlabel='fare (£)', ylabel=r'fares probability $p$')
+```
+
+```{python}
+fig, ax = plt.subplots()
+_ = ax.hist('fare', data=df, color='black', edgecolor='black', bins=[3, 12, 30, 870], density=True)
+_ = ax.set(xlabel='fare (£)', ylabel=r'fares probability $p$', xticklabels=['3rd', '2nd', '1st B', '1st S'])
+```
+
+<!-- #region slideshow={"slide_type": "notes"} -->
+# Use groupby to simplify code
+<!-- #endregion -->
+
+<!-- #region slideshow={"slide_type": "notes"} -->
+![](../images/groupby.png?)
+source: [pandas cheatsheet](https://github.com/pandas-dev/pandas/blob/master/doc/cheatsheet/Pandas_Cheat_Sheet.pdf)
+
+<!-- #endregion -->
+
+<!-- #region slideshow={"slide_type": "notes"} -->
+Groupby is used to gather all rows that have one observation of one variable in common. For example, a `.groupby('sex')` gathers all the rows where the sex is male and puts them in one dataframe, and puts all the rows where the sex is female into a second dataframe. The next step in a groupby operation is usually to then aggregate these dataframes using some function (mean, median, etc) to get aggregate statistics for each variable (step 2 in the image above) but we can also make use of the individual dataframes. 
+<!-- #endregion -->
+
+```{python slideshow={'slide_type': 'slide'}}
+fig, ax = plt.subplots()
+# only consider rows where we know the age
+for label, gdf in df.groupby('sex'):
+    ax.hist('age', bins=[0, 15,25, 55, 64], data=gdf, label=label, alpha=.5)
+_ = ax.set_xticks([0, 15,25, 55, 64])
+_ = ax.legend()
+```
+
+<!-- #region slideshow={"slide_type": "slide"} -->
+# Lets make things interactive
+<!-- #endregion -->
+
+<!-- #region slideshow={"slide_type": "skip"} -->
+Just as in the [previous notebook](02_visual_variables.ipynb), we can link multiple graphs together via the sharex parameter.
+<!-- #endregion -->
+
+```{python slideshow={'slide_type': 'slide'}}
+# %matplotlib ipympl
+# %matplotlib widget
+fig, (ax1, ax2) = plt.subplots(2, 1, sharex=True)
+# only consider rows where we know the age
+for label, gdf in df.groupby('sex'):
+    ax1.hist('age', bins='auto', data=gdf, label=label, alpha=.5)
+    ax2.hist('age', bins='auto', data=gdf, label=label, alpha=.5, density=True)
+
+_ = ax1.legend()
+_ = ax1.set(title='counts', ylabel='N')
+_ = ax2.set(title='density', ylabel='P', xlabel='age')
+```
+
+<!-- #region slideshow={"slide_type": "slide"} -->
+# What about bars and pies?
+<!-- #endregion -->
+
+<!-- #region slideshow={"slide_type": "slide"} -->
+The titanic dataset has a bunch of categorical variables (sex, pclass, survival) that are fairly interesting. In particular, it would be useful to plot some counts of this data so that we can get a sense of how things like the ratios of people in each class.
+<!-- #endregion -->
+
+<!-- #region slideshow={"slide_type": "slide"} -->
+## Lets get counts
+
+<!-- #endregion -->
+
+<!-- #region slideshow={"slide_type": "skip"} -->
+Pandas has a very useful function called `.value_counts` that returns the frequencies of each measurement of a variable in a row. Here I want to compute who survived. 
+<!-- #endregion -->
+
+```{python slideshow={'slide_type': 'slide'}}
+survived = df['survived'].value_counts()
+survived
+```
+
+<!-- #region slideshow={"slide_type": "slide"} -->
+# Let's make a pie chart!
+<!-- #endregion -->
+
+<!-- #region slideshow={"slide_type": "skip"} -->
+Pie charts show the ratios between different categories. The first argument to then pie chart is the wedge size (or data values). Like many of the other Matplotlib plotting routines, we can also pass in the colors and labels and [lots of other customizations](https://matplotlib.org/gallery/pie_and_polar_charts/pie_features.html). We access the values in the dataframe using the `.values` attribute
+<!-- #endregion -->
+
+```{python slideshow={'slide_type': 'slide'}}
+fig, ax =plt.subplots()
+_ = ax.pie(x=survived.values, 
+       labels=['survived', 'died'], colors=['yellowgreen', 'black'])
+```
+
+<!-- #region slideshow={"slide_type": "slide"} -->
+## Practice
+What's the ratio of men to women? Display it using a pie chart
+<!-- #endregion -->
+
+```{python}
+
+```
+
+<!-- #region slideshow={"slide_type": "slide"} -->
+# Bar charts
+<!-- #endregion -->
+
+<!-- #region slideshow={"slide_type": "skip"} -->
+Often we don't want the ratio of categories, but the counts. To do this, we create bar charts. Matplotlib supports [many different types](https://matplotlib.org/gallery/index.html#lines-bars-and-markers) of bar charts. Here we will illustrate vertical bar charts.
+<!-- #endregion -->
+
+```{python slideshow={'slide_type': 'slide'}}
+pclass = df['sex'].value_counts()
+pclass
+```
+
+<!-- #region slideshow={"slide_type": "skip"} -->
+Matplotlib supports strings as first class data, so we can plot the labels directly. We use the '.index' attribute to get the categories and the '.values' attribute to obtain the values.
+<!-- #endregion -->
+
+```{python slideshow={'slide_type': 'slide'}}
+fig, ax = plt.subplots()
+_ = ax.bar(pclass.index, pclass.values)
+```
+
+<!-- #region slideshow={"slide_type": "slide"} -->
+# Practice 
+How many people are in each class and how do visualize that?
+<!-- #endregion -->
+
+```{python}
+
+```
