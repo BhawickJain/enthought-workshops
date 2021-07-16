@@ -106,7 +106,7 @@ _ = ax.plot(x, sin_x, marker='*', markerfacecolor='white', markeredgecolor='blue
 _ = ax.set_aspect('equal')
 ```
 
-```{python tags=c(), jupyter={'outputs_hidden': True}}
+```{python tags=c()}
 # more options available in docs
 # ? ax.plot
 ```
@@ -238,6 +238,8 @@ Let's do a little data cleaning using the `.dropna` method, which here drops any
 df = pd.read_csv("http://bit.ly/tcsv19").dropna()
 ```
 
+`[?]` What happens to the graphs if you didn't run the above line?
+
 <!-- #region slideshow={"slide_type": "skip"} -->
 You can use `df.head()` to take a quick peak at the data.  This is helpful to remind ourselves what the column names and datatypes are!
 <!-- #endregion -->
@@ -328,6 +330,15 @@ _ = ax.set(xlabel = 'Age', ylabel = 'Fare', title='Fare by Age with survival')
 _ = ax.legend()
 ```
 
+```{python}
+fig, ax = plt.subplots()
+_ = ax.scatter(df['age'], df['fare'], c=df['survived'])
+_ = ax.set(xlabel = 'Age', ylabel = 'Fare', title='Fare by Age with survival')
+_ = ax.legend()
+
+# No handes with labels found to in legend
+```
+
 <!-- #region slideshow={"slide_type": "slide"} -->
 # Lets customize those colors
 <!-- #endregion -->
@@ -369,6 +380,10 @@ _ = ax.set(xlabel = 'Age', ylabel = 'Fare')
 _ =  ax.legend(*sc.legend_elements())
 ```
 
+```{python}
+sc.legend_elements()
+```
+
 <!-- #region slideshow={"slide_type": "slide"} -->
 ## Lets add custom labels
 <!-- #endregion -->
@@ -389,6 +404,10 @@ _ =  ax.legend(handles = sc.legend_elements()[0], labels=['Died', 'Survived'])
 ```
 
 ```{python}
+sc.legend_elements()
+```
+
+```{python}
 fig, ax = plt.subplots()
 sc = ax.scatter('age', 'fare', c='survived', cmap=cmap, data=df)
 _ = ax.set(xlabel = 'Age', ylabel = 'Fare')
@@ -405,6 +424,20 @@ Scatter's legend_elements() is a new feature in Matplotlib and so may not be on 
 fig, ax = plt.subplots()
 _ = ax.scatter('age', 'fare', c='black', cmap=cmap, data=df[df['survived']==0], label='died')
 _ = ax.scatter('age', 'fare', c='yellowgreen', cmap=cmap, data=df[df['survived']==1], label='survived')
+_ = ax.set(xlabel = 'Age', ylabel = 'Fare')
+_ =  ax.legend()
+```
+
+the `c` parameter initially seems confusing as it accepts both the `df['survived']` and the color `black` and `yellowgreen`. This is because it can accept an array of numerical values across which color is spread across. Or, you can send in a `string` which takes in the name of a color belonging to the cmap. You can also send in more types like RGB tuples which is in the docs.
+
+
+
+technically the `cmap` is redundant any color from matplotlib can be chosen and will useful when an array of numerical values is sent into `c`
+
+```{python}
+fig, ax = plt.subplots()
+_ = ax.scatter('age', 'fare', c='blue', data=df[df['survived']==0], label='died')
+_ = ax.scatter('age', 'fare', c='yellowgreen', data=df[df['survived']==1], label='survived')
 _ = ax.set(xlabel = 'Age', ylabel = 'Fare')
 _ =  ax.legend()
 ```
@@ -480,6 +513,10 @@ Create a scatter plot exploring the relationship between:
 <!-- #region slideshow={"slide_type": "skip"} -->
 At a certain point, there are diminishing returns to trying to to cram more information into one scatter plot. Instead, matplotlib supports linking two plots together via the sharex/sharey parameters to `plt.subplots`. Here it's used to link two plots, one for each sex. 
 <!-- #endregion -->
+
+```{python jupyter={'outputs_hidden': True}, tags=c()}
+# !pip install ipympl
+```
 
 ```{python slideshow={'slide_type': 'slide'}}
 # %matplotlib widget
