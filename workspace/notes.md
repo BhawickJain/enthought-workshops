@@ -39,3 +39,6 @@ Tutorials within Source Code — (matplotlib) [[URL](https://github.com/matplotl
 
 <a id='SO-InlineLowQuality'>[SO-InlineLowQuality]<a/>  
 Inline images have low quality — Stackoverflow [[URL](https://stackoverflow.com/questions/25412513/inline-images-have-low-quality)]
+
+<a id='MaMatplotlib-ThirdPartytplotlib-ThirdParty'>[Matplotlib-ThirdParty]</a>  
+Third Party Functionality Extension — Matplotlib [[URL](https://matplotlib.org/stable/thirdpartypackages/index.html)]
