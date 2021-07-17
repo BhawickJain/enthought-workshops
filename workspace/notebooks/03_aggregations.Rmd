@@ -168,8 +168,8 @@ Just as in the [previous notebook](02_visual_variables.ipynb), we can link multi
 <!-- #endregion -->
 
 ```{python slideshow={'slide_type': 'slide'}}
-# %matplotlib ipympl
-# %matplotlib widget
+# # %matplotlib ipympl
+# # %matplotlib widget
 fig, (ax1, ax2) = plt.subplots(2, 1, sharex=True)
 # only consider rows where we know the age
 for label, gdf in df.groupby('sex'):
@@ -223,8 +223,15 @@ What's the ratio of men to women? Display it using a pie chart
 <!-- #endregion -->
 
 ```{python}
-
+df['sex'].value_counts()
 ```
+
+```{python}
+fig, ax = plt.subplots()
+_ = ax.pie(x=df['sex'].value_counts().values, labels=['males', 'females'], colors = ['darkred', 'darkorange'])
+```
+
+`[?]` how do you add a percentage number on these charts?
 
 <!-- #region slideshow={"slide_type": "slide"} -->
 # Bar charts
@@ -235,24 +242,25 @@ Often we don't want the ratio of categories, but the counts. To do this, we crea
 <!-- #endregion -->
 
 ```{python slideshow={'slide_type': 'slide'}}
-pclass = df['sex'].value_counts()
+pclass = df['pclass'].value_counts()
 pclass
+```
+
+```{python}
+df.groupby('cabin').size().sort_values(ascending=False)
 ```
 
 <!-- #region slideshow={"slide_type": "skip"} -->
 Matplotlib supports strings as first class data, so we can plot the labels directly. We use the '.index' attribute to get the categories and the '.values' attribute to obtain the values.
 <!-- #endregion -->
 
-```{python slideshow={'slide_type': 'slide'}}
-fig, ax = plt.subplots()
-_ = ax.bar(pclass.index, pclass.values)
-```
-
 <!-- #region slideshow={"slide_type": "slide"} -->
 # Practice 
 How many people are in each class and how do visualize that?
 <!-- #endregion -->
 
-```{python}
-
+```{python slideshow={'slide_type': 'slide'}}
+fig, ax = plt.subplots()
+_ = ax.bar(pclass.index, pclass.values, tick_label=['3rd', '2nd', '1st'], color='black')
+_ = ax.set(xlabel='passenger class', ylabel=r'number of passengers $\theta$')
 ```
