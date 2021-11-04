@@ -2,7 +2,7 @@
 title: Introduction to Matplotlib (2019)
 date: 13/07/2021 
 author:
- - Author1
+ - Bhawick Jain
 or: 20210713195422
 ---
 
@@ -14,6 +14,7 @@ Authors also recommend [[Matplotlib-Anatomy](#Matplotlib-Anatomy)]
 Preamble: Describes the purpose and context of the work.  Describe the purpose of engaging with the artefact. Initial thoughts and where its news fits into your assertions.
 
 `[?]` Aizenman prefers conda from the installation advice, why might that be?  
+`[?]` How do you export figures into a folder for references?  
 
 Use the following magic to enable inline prints to be SVG instead of low resolutino PNG. You can also used `retina` to render high-res PNG prints [[SO-InlineLowQuality](#SO-InlineLowQuality)]. `retina` has more reliable export options.
 
